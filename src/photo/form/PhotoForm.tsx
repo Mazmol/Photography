@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 'use client';
 
 import {
@@ -586,6 +587,12 @@ export default function PhotoForm({
                             // eslint-disable-next-line max-len
                             colorData={generateColorDataFromString(formData.colorData)}
                           />}
+                        />;
+                      case 'tags':
+                        return <FieldsetWithStatus
+                          key={key}
+                          {...fieldProps}
+                          className="relative z-2"
                         />;
                       case 'albums':
                         return <FieldsetAlbum
