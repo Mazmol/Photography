@@ -50,7 +50,7 @@ export const TEXT: I18N = {
     full: 'Completo',
     grid: 'Cuadrícula',
     viewOptions: 'Opciones de vista',
-    about: 'Sobre',
+    library: 'Biblioteca',
     admin: 'Menú de administrador',
     search: 'Buscar',
     prev: 'Anterior',
@@ -58,7 +58,7 @@ export const TEXT: I18N = {
     next: 'Siguiente',
     nextShort: 'Sig',
   },
-  about: {
+  library: {
     titleDefault: 'Sobre este sitio',
     updated: 'Actualizado hace {{distance}}',
     photoCount: 'Número de fotos',
@@ -70,9 +70,6 @@ export const TEXT: I18N = {
     recentAlbum: 'Álbum reciente',
     popularTag: 'Etiqueta popular',
     popularPlace: 'Lugar popular',
-  },
-  footer: {
-    madeWith: 'Hecho con',
   },
   sort: {
     sort: 'Ordenar',
@@ -214,8 +211,10 @@ export const TEXT: I18N = {
     tryAgain: 'Intentar de Nuevo',
     finishing: 'Finalizando...',
     uploading: 'Subiendo',
+    cancel: 'Cancelar',
     copyPhrase: '{{label}} copiado',
     paginate: '{{index}} de {{count}}',
     paginateAction: '{{action}} {{index}} de {{count}}',
+    madeWith: 'Hecho con',
   },
 };

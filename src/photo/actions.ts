@@ -64,6 +64,7 @@ import { streamOpenAiImageQuery } from '@/platforms/openai';
 import {
   AI_TEXT_AUTO_GENERATED_FIELDS,
   AI_CONTENT_GENERATION_ENABLED,
+  AUTO_GENERATE_LOCATIONS,
   BLUR_ENABLED,
 } from '@/app/config';
 import { generateAiImageQueries } from './ai/server';
@@ -77,6 +78,7 @@ import { after } from 'next/server';
 import {
   getColorFieldsForImageUrl,
   getColorFieldsForPhotoDbInsert,
+  getColorFromAI,
 } from '@/photo/color/server';
 import { shouldBackfillPhotoStorage } from './update/server';
 import { getAlbumTitlesFromFormData } from '@/album/form';
@@ -162,6 +164,7 @@ const addUpload = async ({
     includeInitialPhotoFields: true,
     generateBlurData: BLUR_ENABLED,
     generateResizedImage: AI_CONTENT_GENERATION_ENABLED,
+    lookupLocation: AUTO_GENERATE_LOCATIONS,
   });
 
   if (formDataFromExif) {
@@ -453,6 +456,11 @@ export const getPhotosNeedingRecipeTitleCountAction = async (
 export const getRecipeDataForTitleAction = async (recipeTitle: string) =>
   runAuthenticatedAdminServerAction(async () =>
     await getRecipeDataForTitle(recipeTitle),
+  );
+
+export const getAiColorAction = async (url: string) =>
+  runAuthenticatedAdminServerAction(async () =>
+    await getColorFromAI(url),
   );
 
 export const storeColorDataForPhotoAction = async (photoId: string) =>

@@ -50,7 +50,7 @@ export const TEXT: I18N = {
     full: 'Lengkap',
     grid: 'Grid',
     viewOptions: 'Opsi tampilan',
-    about: 'Tentang',
+    library: 'Pustaka',
     admin: 'Admin',
     search: 'Cari',
     prev: 'Sebelumnya',
@@ -58,7 +58,7 @@ export const TEXT: I18N = {
     next: 'Berikutnya',
     nextShort: 'Brkt',
   },
-  about: {
+  library: {
     titleDefault: 'Tentang situs ini',
     updated: 'Diperbarui {{distance}} yang lalu',
     photoCount: 'Jumlah foto',
@@ -70,9 +70,6 @@ export const TEXT: I18N = {
     recentAlbum: 'Album terbaru',
     popularTag: 'Tag populer',
     popularPlace: 'Tempat populer',
-  },
-  footer: {
-    madeWith: 'Dibuat dengan',
   },
   sort: {
     sort: 'Urutkan',
@@ -212,8 +209,10 @@ export const TEXT: I18N = {
     tryAgain: 'Coba Lagi',
     finishing: 'Menyelesaikan ...',
     uploading: 'Mengunggah',
+    cancel: 'Batal',
     copyPhrase: '{{label}} disalin',
     paginate: '{{index}} dari {{count}}',
     paginateAction: '{{action}} {{index}} dari {{count}}',
+    madeWith: 'Dibuat dengan',
   },
 };
