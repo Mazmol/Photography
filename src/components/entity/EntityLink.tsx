@@ -17,7 +17,10 @@ import { SHOW_CATEGORY_IMAGE_HOVERS } from '@/app/config';
 import PhotosHover from '@/photo/PhotosHover';
 import { getPhotosCachedAction } from '@/photo/actions';
 import { PhotoQueryOptions } from '@/db';
-import { MAX_PHOTOS_TO_SHOW_PER_CATEGORY } from '@/image-response';
+import {
+  PHOTO_PREVIEW_QUERY_OPTIONS,
+  PHOTOS_TO_SHOW_PER_CATEGORY,
+} from '@/image-response';
 
 export interface EntityLinkExternalProps {
   ref?: RefObject<HTMLSpanElement | null>
@@ -33,6 +36,7 @@ export interface EntityLinkExternalProps {
   hoverCount?: number
   hoverType?: 'auto' | 'text' | 'image' | 'none'
   hoverQueryOptions?: PhotoQueryOptions
+  hoverDescription?: string
 }
 
 export default function EntityLink({
@@ -53,6 +57,7 @@ export default function EntityLink({
   hoverCount = 0,
   hoverType = 'auto',
   hoverQueryOptions,
+  hoverDescription,
   prefetch,
   title,
   action,
@@ -204,12 +209,13 @@ export default function EntityLink({
         ? <PhotosHover
           hoverKey={path}
           header={renderLink(true)}
+          description={hoverDescription}
           photosCount={hoverCount}
+          maxPhotos={PHOTOS_TO_SHOW_PER_CATEGORY}
           getPhotos={() =>
             getPhotosCachedAction({
               ...hoverQueryOptions,
-              sortBy: 'random',
-              limit: MAX_PHOTOS_TO_SHOW_PER_CATEGORY,
+              ...PHOTO_PREVIEW_QUERY_OPTIONS,
             })}
           color={contrast === 'frosted' ? 'frosted' : undefined}
         >

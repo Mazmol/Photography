@@ -4,8 +4,13 @@ import { TINT_FOLDERS } from '@/app/config';
 import CategoryIcon from '@/category/CategoryIcon';
 import type { CategoryKey } from '@/category';
 import PhotoFolder from '@/components/folder/PhotoFolder';
+import IconFavs from '@/components/icons/IconFavs';
+import IconRecents from '@/components/icons/IconRecents';
+import PhotoFilmIcon from '@/film/PhotoFilmIcon';
+import { isStringFujifilmSimulation } from '@/platforms/fujifilm/simulation';
+import { TAG_FAVS } from '@/tag';
 import clsx from 'clsx/lite';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { LuChevronRight } from 'react-icons/lu';
 import type { LibrarySetFolder } from '.';
 
@@ -20,6 +25,28 @@ export default function LibrarySection({
 }) {
   const [isOpen, setIsOpen] = useState(true);
   const contentId = `library-section-${category}`;
+  const showFilmCaptionIcons = category === 'films' &&
+    folders.some(({ key }) => isStringFujifilmSimulation(key));
+
+  const getFolderCaptionIcon = (key: string): ReactNode => {
+    switch (key) {
+      case TAG_FAVS:
+        return <IconFavs
+          size={10}
+          className="translate-y-[-0.5px]"
+          highlight
+        />;
+      case 'recents':
+        return <IconRecents size={10} solid />;
+    }
+    if (showFilmCaptionIcons) {
+      return <PhotoFilmIcon
+        film={key}
+        height={13}
+        className="translate-y-[-0.5px]"
+      />;
+    }
+  };
 
   return (
     <div className="group/section border-t border-medium pt-1.5 space-y-4">
@@ -81,6 +108,7 @@ export default function LibrarySection({
               <PhotoFolder
                 photos={folder.photos}
                 caption={folder.caption}
+                captionIcon={getFolderCaptionIcon(folder.key)}
                 count={folder.count}
                 href={folder.path}
                 tint={TINT_FOLDERS ? 'on' : 'off'}
