@@ -19,7 +19,7 @@ import PhotoTags from '@/tag/PhotoTags';
 import ShareButton from '@/share/ShareButton';
 import DownloadButton from '@/components/DownloadButton';
 import PhotoCamera from '../camera/PhotoCamera';
-import { cameraFromPhoto } from '@/camera';
+import { Camera, cameraFromPhoto } from '@/camera';
 import PhotoFilm from '@/film/PhotoFilm';
 import { sortTagsArray } from '@/tag';
 import DivDebugBaselineGrid from '@/components/DivDebugBaselineGrid';
@@ -33,6 +33,7 @@ import {
   ALWAYS_SHOW_EXPOSURE_COMP,
   UPPERCASE_TITLES,
   PHOTO_TITLE_SERIF,
+  PHOTO_COLOR_BAR,
   GEO_PRIVACY_ENABLED,
 } from '@/app/config';
 import AdminPhotoMenu from '@/admin/AdminPhotoMenu';
@@ -51,7 +52,7 @@ import useRecipeOverlay from '../recipe/useRecipeOverlay';
 import PhotoRecipeOverlay from '@/recipe/PhotoRecipeOverlay';
 import PhotoRecipe from '@/recipe/PhotoRecipe';
 import PhotoLens from '@/lens/PhotoLens';
-import { lensFromPhoto } from '@/lens';
+import { Lens, lensFromPhoto } from '@/lens';
 import MaskedScroll from '@/components/MaskedScroll';
 import { useAppText } from '@/i18n/state/client';
 import { Album } from '@/album';
@@ -60,6 +61,7 @@ import { useEditTitlesState } from '@/admin/edit-titles/EditTitlesState';
 import { DATA_KEY_PHOTO_LARGE } from '@/admin/edit-titles/EditTitlesProvider';
 import FieldsetWithStatus from '@/components/FieldsetWithStatus';
 import PlaceEntity from '@/place/PlaceEntity';
+import PhotoColorBar from './color/PhotoColorBar';
 
 export default function PhotoLarge({
   photo,
@@ -107,6 +109,11 @@ export default function PhotoLarge({
   query?: string
   recent?: boolean
   year?: string
+  camera?: Camera
+  lens?: Lens
+  recipe?: string
+  film?: string
+  focal?: number
   revalidatePhoto?: RevalidatePhoto
   showTitle?: boolean
   showTitleAsH1?: boolean
@@ -516,28 +523,35 @@ export default function PhotoLarge({
                         />
                       </div>}
                   </>}
+              </div>
+              {PHOTO_COLOR_BAR &&
+                <div className="max-3xl:col-start-2">
+                  <PhotoColorBar colorData={photo.colorData} />
+                </div>}
+              <div className={clsx(
+                // Second column on mobile, directly under the color bar
+                'max-3xl:col-start-2',
+                'flex gap-x-3 gap-y-baseline',
+                '3xl:flex-col flex-wrap',
+                '3xl:justify-normal',
+              )}>
+                <PhotoDate
+                  photo={photo}
+                  className={clsx(
+                    'text-medium',
+                    // Prevent collision with admin button
+                    !hasNonDateContent && isUserSignedIn && '3xl:pr-7',
+                  )}
+                  // 'createdAt' is a naive datetime which does not require
+                  // a timezone and will not cause server/client mismatch
+                  timezone={null}
+                  hideTime={!SHOW_TAKEN_AT_TIME}
+                />
                 <div className={clsx(
-                  'flex gap-x-3 gap-y-baseline',
-                  '3xl:flex-col flex-wrap',
-                  '3xl:justify-normal',
+                  'flex gap-1 translate-y-[0.5px]',
+                  'translate-x-[-2.5px]',
                 )}>
-                  <PhotoDate
-                    photo={photo}
-                    className={clsx(
-                      'text-medium',
-                      // Prevent collision with admin button
-                      !hasNonDateContent && isUserSignedIn && '3xl:pr-7',
-                    )}
-                    // 'createdAt' is a naive datetime which does not require
-                    // a timezone and will not cause server/client mismatch
-                    timezone={null}
-                    hideTime={!SHOW_TAKEN_AT_TIME}
-                  />
-                  <div className={clsx(
-                    'flex gap-1 translate-y-[0.5px]',
-                    'translate-x-[-2.5px]',
-                  )}>
-                    {showZoomControls &&
+                  {showZoomControls &&
                       <LoaderButton
                         tooltip={appText.tooltip.zoom}
                         aria-label={appText.tooltip.zoom}
@@ -547,7 +561,7 @@ export default function PhotoLarge({
                         className="text-medium translate-y-[0.25px]"
                         hideFocusOutline
                       />}
-                    {shouldShare &&
+                  {shouldShare &&
                       <ShareButton
                         tooltip={appText.tooltip.sharePhoto}
                         photo={photo}
@@ -583,15 +597,14 @@ export default function PhotoLarge({
                           : undefined}
                         prefetch={prefetchRelatedLinks}
                       />}
-                    {ALLOW_PUBLIC_DOWNLOADS && 
+                  {ALLOW_PUBLIC_DOWNLOADS && 
                       <DownloadButton 
                         className="translate-y-[0.5px] 3xl:translate-y-0"
                         photo={photo} 
                       />}
-                  </div>
-                  {showStorageCheck &&
-                    <AdminPhotoStorageCheck photo={photo} />}
                 </div>
+                {showStorageCheck &&
+                    <AdminPhotoStorageCheck photo={photo} />}
               </div>
             </DivDebugBaselineGrid>
           </MaskedScroll>
